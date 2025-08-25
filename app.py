@@ -294,7 +294,7 @@ def create_initial_admin():
         if not User.query.first():
             admin = User(
                 username='admin',
-                password=generate_password_hash('admin123'),
+                password=generate_password_hash('F42V'),
                 is_admin=True
             )
             db.session.add(admin)
