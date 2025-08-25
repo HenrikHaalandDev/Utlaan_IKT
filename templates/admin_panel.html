@@ -1,0 +1,72 @@
+<!-- templates/admin_panel.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Admin Panel</h2>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <a href="{{ url_for('add_user') }}" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> Legg til bruker
+        </a>
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Brukeradministrasjon</h5>
+    </div>
+    <div class="card-body">
+        {% if users %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Brukernavn</th>
+                        <th>Admin</th>
+                        <th>Handlinger</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>
+                            {% if user.is_admin %}
+                            <span class="badge bg-success">Ja</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Nei</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if session.user_id != user.id %}
+                            <a href="{{ url_for('toggle_admin', user_id=user.id) }}" class="btn btn-sm btn-warning">
+                                {% if user.is_admin %}
+                                <i class="fas fa-user-minus"></i> Fjern admin
+                                {% else %}
+                                <i class="fas fa-user-shield"></i> Gi admin
+                                {% endif %}
+                            </a>
+                            <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Er du sikker på at du vil slette denne brukeren?')">
+                                <i class="fas fa-trash"></i> Slett
+                            </a>
+                            {% else %}
+                            <span class="text-muted">Din konto</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            Ingen brukere funnet.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

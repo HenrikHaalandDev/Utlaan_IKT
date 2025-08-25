@@ -1,0 +1,57 @@
+<!-- templates/user_profile.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Min profil</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Brukernavn *</label>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="current_password" class="form-label">Nåværende passord *</label>
+                        <input type="password" class="form-control" id="current_password" name="current_password" required>
+                        <div class="form-text text-muted">Du må oppgi ditt nåværende passord for å bekrefte endringer.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="new_password" class="form-label">Nytt passord</label>
+                        <input type="password" class="form-control" id="new_password" name="new_password">
+                        <div class="form-text text-muted">La feltet stå tomt hvis du ikke vil endre passord.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">Bekreft nytt passord</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p><strong>Brukertype:</strong> 
+                            {% if user.is_admin %}
+                            <span class="badge bg-danger">Administrator</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Standard bruker</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-3 text-end">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary me-2">Avbryt</a>
+                        <button type="submit" class="btn btn-primary">Lagre endringer</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-muted">
+                <small>* Obligatoriske felt</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+
+<!-- templates/new_loan.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Nytt utlån</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="borrower_name" class="form-label">Navn på elev/ansatt *</label>
+                            <input type="text" class="form-control" id="borrower_name" name="borrower_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="class_info" class="form-label">Klasse</label>
+                            <input type="text" class="form-control" id="class_info" name="class_info">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="item" class="form-label">Hva er utlånt *</label>
+                        <input type="text" class="form-control" id="item" name="item" required>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="value" class="form-label">Verdisak</label>
+                            <input type="text" class="form-control" id="value" name="value" placeholder="f.eks. 5000 kr">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="reason" class="form-label">Hvorfor</label>
+                            <input type="text" class="form-control" id="reason" name="reason">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 text-end">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary me-2">Avbryt</a>
+                        <button type="submit" class="btn btn-primary">Registrer utlån</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-muted">
+                <small>* Obligatoriske felt</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

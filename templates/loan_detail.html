@@ -1,0 +1,114 @@
+<!-- templates/loan_detail.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Utlån detaljer</h4>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-sm">
+                    <i class="fas fa-arrow-left"></i> Tilbake
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Status:</strong>
+                            {% if loan.is_returned %}
+                            <span class="badge bg-success">Returnert</span>
+                            {% else %}
+                            <span class="badge bg-warning">Aktiv</span>
+                            {% endif %}
+                        </p>
+                        <h5>{{ loan.item }}</h5>
+                        <p class="text-muted">ID: {{ loan.id }}</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        {% if not loan.is_returned %}
+                        <a href="{{ url_for('return_loan', loan_id=loan.id) }}" class="btn btn-success" onclick="return confirm('Er du sikker på at dette utstyret er returnert?')">
+                            <i class="fas fa-check"></i> Merk som returnert
+                        </a>
+                        {% endif %}
+                        
+                        {% if is_admin %}
+                        <a href="{{ url_for('delete_loan', loan_id=loan.id) }}" class="btn btn-danger ms-2" onclick="return confirm('Er du sikker på at du vil slette dette utlånet? Denne handlingen kan ikke angres.')">
+                            <i class="fas fa-trash"></i> Slett utlån
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Navn på elev/ansatt</label>
+                            <p class="border p-2 rounded">{{ loan.borrower_name }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Klasse</label>
+                            <p class="border p-2 rounded">{{ loan.class_info or 'Ikke angitt' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label class="form-label">Hva er utlånt</label>
+                            <p class="border p-2 rounded">{{ loan.item }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Verdisak</label>
+                            <p class="border p-2 rounded">{{ loan.value or 'Ikke angitt' }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Hvorfor</label>
+                            <p class="border p-2 rounded">{{ loan.reason or 'Ikke angitt' }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Utlånt dato/tid</label>
+                            <p class="border p-2 rounded">{{ loan.checkout_date_local.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Returnert dato/tid</label>
+                            <p class="border p-2 rounded">
+                                {% if loan.return_date %}
+                                {{ loan.return_date_local.strftime('%Y-%m-%d %H:%M:%S') }}
+                                {% else %}
+                                Ikke returnert ennå
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label class="form-label">Registrert av</label>
+                            <p class="border p-2 rounded">{{ loan.responsible_user.username }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

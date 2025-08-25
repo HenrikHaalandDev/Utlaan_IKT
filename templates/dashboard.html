@@ -1,0 +1,122 @@
+
+<!-- templates/dashboard.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Utlån Dashboard</h2>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <a href="{{ url_for('new_loan') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nytt utlån
+        </a>
+    </div>
+</div>
+
+<ul class="nav nav-tabs mb-4" id="loanTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab">
+            Aktive utlån <span class="badge bg-primary">{{ active_loans|length }}</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="returned-tab" data-bs-toggle="tab" data-bs-target="#returned" type="button" role="tab">
+            Returnerte <span class="badge bg-success">{{ returned_loans|length }}</span>
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="loansTabContent">
+    <!-- Active Loans Tab -->
+    <div class="tab-pane fade show active" id="active" role="tabpanel">
+        {% if active_loans %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Navn</th>
+                        <th>Klasse</th>
+                        <th>Utstyr</th>
+                        <th>Utlånt dato</th>
+                        <th>Handlinger</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in active_loans %}
+                    <tr>
+                        <td>{{ loan.borrower_name }}</td>
+                        <td>{{ loan.class_info }}</td>
+                        <td>{{ loan.item }}</td>
+                        <td>{{ loan.checkout_date_local.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>
+                            <a href="{{ url_for('loan_detail', loan_id=loan.id) }}" class="btn btn-sm btn-info">
+                                <i class="fas fa-info-circle"></i> Detaljer
+                            </a>
+                            <a href="{{ url_for('return_loan', loan_id=loan.id) }}" class="btn btn-sm btn-success" onclick="return confirm('Er du sikker på at dette utstyret er returnert?')">
+                                <i class="fas fa-check"></i> Merk som returnert
+                            </a>
+                            {% if is_admin %}
+                            <a href="{{ url_for('delete_loan', loan_id=loan.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Er du sikker på at du vil slette dette utlånet? Denne handlingen kan ikke angres.')">
+                                <i class="fas fa-trash"></i> Slett
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            Det er ingen aktive utlån for øyeblikket.
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Returned Loans Tab -->
+    <div class="tab-pane fade" id="returned" role="tabpanel">
+        {% if returned_loans %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Navn</th>
+                        <th>Klasse</th>
+                        <th>Utstyr</th>
+                        <th>Utlånt dato</th>
+                        <th>Returnert dato</th>
+                        <th>Handlinger</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in returned_loans %}
+                    <tr>
+                        <td>{{ loan.borrower_name }}</td>
+                        <td>{{ loan.class_info }}</td>
+                        <td>{{ loan.item }}</td>
+                        <td>{{ loan.checkout_date_local.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ loan.return_date_local.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>
+                            <a href="{{ url_for('loan_detail', loan_id=loan.id) }}" class="btn btn-sm btn-info">
+                                <i class="fas fa-info-circle"></i> Detaljer
+                            </a>
+                            {% if is_admin %}
+                            <a href="{{ url_for('delete_loan', loan_id=loan.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Er du sikker på at du vil slette dette utlånet? Denne handlingen kan ikke angres.')">
+                                <i class="fas fa-trash"></i> Slett
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            Det er ingen returnerte utlån i systemet.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
